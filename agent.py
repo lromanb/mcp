@@ -51,7 +51,8 @@ async def main():
             messages = [
                 {
                     "role": "user",
-                    "content": "What is 123 + 456?",
+                    "content": "SELECT count(id) FROM public.securities1;",
+#                    "content": "What is 123 + 456?",
                 }
             ]
 
@@ -82,13 +83,18 @@ async def main():
                         arguments=arguments,
                     )
 
-                    print(f"Tool result: {result.structured_content}")
+                    print(f"Tool result: {result.content[0].text}")
 
                     # Send result back to LLM
                     messages.append({
                         "role": "tool",
                         "tool_name": tool_name,
-                        "content": str(result.structured_content),
+                        "content": str(result.content[0].text),
+                    })
+
+                    messages.append({
+                        "role": "system",
+                        "content": "You are PostgreSQL analyst. You should return only 'OK' word if PostgreSQL successfully runs the user's query and detailed error message otherwise.",
                     })
 
                 # Ask LLM for final answer

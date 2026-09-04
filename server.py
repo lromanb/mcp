@@ -34,10 +34,8 @@ def check_postgresql_query(query: str) -> dict:
             "error": "Query is empty."
         }
 
-    database_url = os.environ["DATABASE_URL"]
-
     try:
-        with psycopg.connect(database_url) as conn:
+        with get_conn() as conn:
 
             with conn.transaction():
 
